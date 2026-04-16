@@ -7,10 +7,37 @@ const Footer = () => {
         <p className="text-section-dark-foreground/50 text-sm">
           © 2026 PMI Norte Perú Chapter. Todos los derechos reservados.
         </p>
+
         <div className="flex items-center gap-4">
-          <a href="#" className="text-section-dark-foreground/50 hover:text-primary transition-colors"><Instagram size={18} /></a>
-          <a href="#" className="text-section-dark-foreground/50 hover:text-primary transition-colors"><Facebook size={18} /></a>
-          <a href="#" className="text-section-dark-foreground/50 hover:text-primary transition-colors"><Linkedin size={18} /></a>
+          <a
+            href="https://www.instagram.com/comunidadestudiantilpminorte/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+            className="text-section-dark-foreground/50 hover:text-primary transition-colors"
+          >
+            <Instagram size={18} />
+          </a>
+
+          <a
+            href="https://www.facebook.com/profile.php?id=61567366105780"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Facebook"
+            className="text-section-dark-foreground/50 hover:text-primary transition-colors"
+          >
+            <Facebook size={18} />
+          </a>
+
+          <a
+            href="https://www.linkedin.com/company/comunidad-estudiantil-pmi-norte-per%C3%BA/posts/?feedView=all"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+            className="text-section-dark-foreground/50 hover:text-primary transition-colors"
+          >
+            <Linkedin size={18} />
+          </a>
         </div>
       </div>
     </footer>

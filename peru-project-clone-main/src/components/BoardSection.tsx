@@ -1,5 +1,5 @@
 import { Linkedin, ChevronLeft, ChevronRight } from "lucide-react";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import presidentaImg from "@/assets/Presidenta.png";
 import vicepresidentaImg from "@/assets/Vicepresidenta.png";
 import LiderdeEventosImg from "@/assets/LiderdeEventos.png";
@@ -18,8 +18,7 @@ const members = [
   { name: "Nombre Apellido", role: "Líder de Talento Humano", photo: LiderdeTalentoHumano },
 ];
 
-// Visible según breakpoint: 1 en móvil, 2 en sm, 3 en lg+
-const useVisible = () => {
+const getVisible = () => {
   if (typeof window === "undefined") return 3;
   if (window.innerWidth < 640) return 1;
   if (window.innerWidth < 1024) return 2;
@@ -28,125 +27,199 @@ const useVisible = () => {
 
 const BoardSection = () => {
   const [current, setCurrent] = useState(0);
+  const [visible, setVisible] = useState<number>(getVisible);
+  const [sliding, setSliding] = useState(false);
+  const [direction, setDirection] = useState<"left" | "right">("right");
+  const trackRef = useRef<HTMLDivElement>(null);
 
-  // Calculamos visible dinámicamente con un estado separado
-  const [visible, setVisible] = useState<number>(() => {
-    if (typeof window === "undefined") return 3;
-    if (window.innerWidth < 640) return 1;
-    if (window.innerWidth < 1024) return 2;
-    return 3;
-  });
-
-  // Actualizar "visible" al cambiar el tamaño de ventana
-  useState(() => {
+  useEffect(() => {
     const onResize = () => {
-      const v = window.innerWidth < 640 ? 1 : window.innerWidth < 1024 ? 2 : 3;
+      const v = getVisible();
       setVisible(v);
       setCurrent((c) => Math.min(c, Math.max(0, members.length - v)));
     };
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
-  });
+  }, []);
 
   const maxIndex = members.length - visible;
-  const prev = useCallback(() => setCurrent((c) => Math.max(0, c - 1)), []);
-  const next = useCallback(() => setCurrent((c) => Math.min(maxIndex, c + 1)), [maxIndex]);
+
+  const goTo = useCallback(
+    (next: number, dir: "left" | "right") => {
+      if (sliding) return;
+      setDirection(dir);
+      setSliding(true);
+      setTimeout(() => {
+        setCurrent(next);
+        setSliding(false);
+      }, 420);
+    },
+    [sliding]
+  );
+
+  const prev = useCallback(() => { if (current > 0) goTo(current - 1, "left"); }, [current, goTo]);
+  const next = useCallback(() => { if (current < maxIndex) goTo(current + 1, "right"); }, [current, maxIndex, goTo]);
 
   return (
-    <section id="junta" className="py-16 sm:py-20" style={{ background: "#F0FBFF" }}>
+    <section id="junta" className="py-12 sm:py-16" style={{ background: "#F0FBFF" }}>
+      <style>{`
+        /* Animación tipo iPhone — spring easing */
+        @keyframes iphoneSlideInRight {
+          0%   { opacity: 0; transform: translateX(100%) scale(0.92); }
+          60%  { opacity: 1; transform: translateX(-4%)  scale(1.01); }
+          80%  { transform: translateX(2%)  scale(0.99); }
+          100% { opacity: 1; transform: translateX(0)    scale(1);    }
+        }
+        @keyframes iphoneSlideInLeft {
+          0%   { opacity: 0; transform: translateX(-100%) scale(0.92); }
+          60%  { opacity: 1; transform: translateX(4%)    scale(1.01); }
+          80%  { transform: translateX(-2%)  scale(0.99); }
+          100% { opacity: 1; transform: translateX(0)     scale(1);    }
+        }
+        @keyframes iphoneSlideOutLeft {
+          0%   { opacity: 1; transform: translateX(0)     scale(1);    }
+          100% { opacity: 0; transform: translateX(-80%) scale(0.92); }
+        }
+        @keyframes iphoneSlideOutRight {
+          0%   { opacity: 1; transform: translateX(0)    scale(1);    }
+          100% { opacity: 0; transform: translateX(80%)  scale(0.92); }
+        }
+
+        .iphone-in-right  { animation: iphoneSlideInRight  0.42s cubic-bezier(0.34,1.56,0.64,1) both; }
+        .iphone-in-left   { animation: iphoneSlideInLeft   0.42s cubic-bezier(0.34,1.56,0.64,1) both; }
+        .iphone-out-left  { animation: iphoneSlideOutLeft  0.22s cubic-bezier(0.4,0,1,1) both; }
+        .iphone-out-right { animation: iphoneSlideOutRight 0.22s cubic-bezier(0.4,0,1,1) both; }
+
+        .board-card { transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease; }
+        .board-card:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 20px 40px rgba(41,10,100,0.25); }
+        .board-card:hover .card-img { transform: scale(1.06); }
+        .card-img { transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+
+        .dot-pill { transition: width 0.35s cubic-bezier(0.34,1.56,0.64,1), background 0.3s ease; }
+      `}</style>
+
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Título */}
-        <div className="text-center mb-10 sm:mb-14">
+        <div className="text-center mb-8 sm:mb-12">
           <div
-            className="inline-block px-4 py-1 rounded-full text-xs sm:text-sm font-semibold mb-4 text-white"
+            className="inline-block px-3 py-1 rounded-full text-xs font-semibold mb-3 text-white"
             style={{ background: "#FF610F" }}
           >
             CEPMI 2026
           </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-3" style={{ color: "#200F38" }}>
-            Junta{" "}
-            <span style={{ color: "#3FC0F0" }}>Directiva</span>
+          <h2 className="text-2xl sm:text-3xl font-extrabold mb-2" style={{ color: "#200F38" }}>
+            Junta <span style={{ color: "#3FC0F0" }}>Directiva</span>
           </h2>
-          <div className="mx-auto mt-3 h-1 w-20 rounded-full" style={{ background: "#3FC0F0" }} />
-          <p className="text-gray-500 mt-4 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed px-2">
+          <div className="mx-auto mt-2 h-1 w-16 rounded-full" style={{ background: "#3FC0F0" }} />
+          <p className="text-gray-500 mt-3 max-w-xl mx-auto text-sm leading-relaxed px-2">
             Profesionales comprometidos con promover la excelencia en la gestión
-            de proyectos y fortalecer la presencia del PMI en la región norte del país.
+            de proyectos en la región norte del país.
           </p>
         </div>
 
         {/* Carrusel */}
-        <div className="relative flex items-center gap-2 sm:gap-4">
+        <div className="relative flex items-center gap-2 sm:gap-3 max-w-5xl mx-auto">
 
           {/* Botón anterior */}
           <button
             onClick={prev}
             disabled={current === 0}
             aria-label="Anterior"
-            className="flex-shrink-0 w-9 h-9 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-white shadow-lg transition-all duration-200 disabled:opacity-30 active:scale-95"
+            className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-white shadow-md transition-all duration-200 disabled:opacity-25 active:scale-90 hover:scale-110"
             style={{ background: "#290A64" }}
           >
-            <ChevronLeft size={18} className="sm:hidden" />
-            <ChevronLeft size={22} className="hidden sm:block" />
+            <ChevronLeft size={16} className="sm:hidden" />
+            <ChevronLeft size={20} className="hidden sm:block" />
           </button>
 
-          {/* Grid de cards — 1 col móvil / 2 col sm / 3 col lg */}
-          <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {members.map((m, i) => {
-              const isVisible = i >= current && i < current + visible;
-              return (
-                <div
-                  key={i}
-                  style={{ display: isVisible ? "block" : "none" }}
-                  className="rounded-2xl overflow-hidden shadow-lg hover:-translate-y-2 transition-all duration-300 bg-white"
-                >
-                  {/* Foto */}
+          {/* Track con overflow hidden */}
+          <div className="flex-1 overflow-hidden rounded-2xl">
+            <div
+              ref={trackRef}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"
+            >
+              {members.map((m, i) => {
+                const isNowVisible  = i >= current && i < current + visible;
+                const wasPrevVisible = sliding && (
+                  i >= (direction === "right" ? current - 1 : current + 1) &&
+                  i <  (direction === "right" ? current - 1 + visible : current + 1 + visible)
+                );
+
+                let animClass = "";
+                if (sliding && isNowVisible)  animClass = direction === "right" ? "iphone-in-right"  : "iphone-in-left";
+                if (sliding && wasPrevVisible) animClass = direction === "right" ? "iphone-out-left" : "iphone-out-right";
+
+                const show = isNowVisible || (sliding && wasPrevVisible);
+
+                return (
                   <div
-                    className="w-full overflow-hidden"
+                    key={i}
+                    className={animClass}
                     style={{
-                      aspectRatio: "3/4",
-                      background: "linear-gradient(180deg, #3FC0F0 0%, #1a9fd4 100%)",
+                      display: show ? "block" : "none",
+                      animationDelay: isNowVisible ? `${(i - current) * 0.05}s` : "0s",
                     }}
                   >
-                    {m.photo ? (
-                      <img
-                        src={m.photo}
-                        alt={m.name}
-                        className="w-full h-full object-cover object-top"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <span className="text-6xl font-bold text-white/40">
-                          {m.role.charAt(0)}
-                        </span>
+                    {/* Card */}
+                    <div
+                      className="board-card rounded-xl overflow-hidden shadow-md"
+                      style={{ background: "#290A64" }}
+                    >
+                      {/* Foto — más pequeña con aspect 4/5 */}
+                      <div
+                        className="w-full overflow-hidden relative"
+                        style={{
+                          aspectRatio: "4/6.5",
+                          background: "linear-gradient(180deg, #4F17A8 0%, #290A64 100%)",
+                        }}
+                      >
+                        {m.photo ? (
+                          <img
+                            src={m.photo}
+                            alt={m.name}
+                            className="card-img w-full h-full object-cover object-top"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <span className="text-5xl font-bold text-white/30">
+                              {m.role.charAt(0)}
+                            </span>
+                          </div>
+                        )}
+                        {/* Gradiente inferior */}
+                        <div
+                          className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none"
+                          style={{ background: "linear-gradient(to top, #290A64, transparent)" }}
+                        />
                       </div>
-                    )}
-                  </div>
 
-                  {/* Info */}
-                  <div className="p-4 text-center">
-                    <span
-                      className="inline-block px-3 py-1 rounded-full text-xs font-semibold mb-2 border-2"
-                      style={{ color: "#FF610F", borderColor: "#FF610F" }}
-                    >
-                      {m.role}
-                    </span>
-                    <h4 className="font-bold text-sm sm:text-base mb-2" style={{ color: "#200F38" }}>
-                      {m.name}
-                    </h4>
-                    <a
-                      href="#"
-                      className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-blue-600 transition-colors active:text-blue-700"
-                      aria-label={`LinkedIn de ${m.name}`}
-                    >
-                      <Linkedin size={14} />
-                      LinkedIn
-                    </a>
+                      {/* Info */}
+                      <div className="px-3 pb-4 pt-2 text-center">
+                        <span
+                          className="inline-block px-2 py-0.5 rounded-full text-xs font-semibold mb-1.5 border"
+                          style={{ color: "#3FC0F0", borderColor: "#3FC0F0" }}
+                        >
+                          {m.role}
+                        </span>
+                        <h4 className="font-bold text-sm mb-2 text-white leading-tight">
+                          {m.name}
+                        </h4>
+                        <a
+                          href="#"
+                          className="inline-flex items-center gap-1 text-xs text-white/40 hover:text-[#3FC0F0] transition-all duration-200"
+                          aria-label={`LinkedIn de ${m.name}`}
+                        >
+                          <Linkedin size={12} />
+                          LinkedIn
+                        </a>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
 
           {/* Botón siguiente */}
@@ -154,26 +227,26 @@ const BoardSection = () => {
             onClick={next}
             disabled={current >= maxIndex}
             aria-label="Siguiente"
-            className="flex-shrink-0 w-9 h-9 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-white shadow-lg transition-all duration-200 disabled:opacity-30 active:scale-95"
+            className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-white shadow-md transition-all duration-200 disabled:opacity-25 active:scale-90 hover:scale-110"
             style={{ background: "#290A64" }}
           >
-            <ChevronRight size={18} className="sm:hidden" />
-            <ChevronRight size={22} className="hidden sm:block" />
+            <ChevronRight size={16} className="sm:hidden" />
+            <ChevronRight size={20} className="hidden sm:block" />
           </button>
         </div>
 
-        {/* Dots */}
-        <div className="flex justify-center gap-2 mt-8">
+        {/* Dots tipo iPhone */}
+        <div className="flex justify-center items-center gap-1.5 mt-6">
           {Array.from({ length: maxIndex + 1 }).map((_, i) => (
             <button
               key={i}
-              onClick={() => setCurrent(i)}
-              aria-label={`Ir a miembro ${i + 1}`}
-              className="rounded-full transition-all duration-200 active:scale-110"
+              onClick={() => goTo(i, i > current ? "right" : "left")}
+              aria-label={`Ir a ${i + 1}`}
+              className="dot-pill rounded-full"
               style={{
-                width: i === current ? "28px" : "10px",
-                height: "10px",
-                background: i === current ? "#3FC0F0" : "#c5e8f5",
+                width: i === current ? "22px" : "8px",
+                height: "8px",
+                background: i === current ? "#3FC0F0" : "#b0d8ec",
               }}
             />
           ))}

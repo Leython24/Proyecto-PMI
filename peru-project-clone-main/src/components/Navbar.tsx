@@ -40,7 +40,7 @@ const Navbar = () => {
     <header className="fixed top-0 left-0 right-0 z-50">
 
       {/* ── TOP BAR — blanco ── */}
-      <div className="bg-white border-b border-gray-200 py-2 px-4">
+      <div className="bg-white border-b border-gray-200 py-3 px-4">
         <div className="container mx-auto flex items-center justify-between">
 
          {/* Iconos sociales — negros */}
@@ -89,7 +89,7 @@ const Navbar = () => {
       </div>
 
       {/* ── MAIN NAV — morado ── */}
-      <nav style={{ background: "#4F17A8" }} className="shadow-lg">
+      <nav style={{ background: "#4F17A8" }} className="shadow-lg ">
         <div className="container mx-auto flex items-center justify-between">
 
           {/* Logo — fondo igual al nav para fusionarse */}
@@ -101,7 +101,7 @@ const Navbar = () => {
               <img
                 src={logo}
                 alt="PMI Norte Perú"
-                className="h-20 w-auto object-contain"
+                className="h-14 w-auto object-contain"
               />
             </div>
 
