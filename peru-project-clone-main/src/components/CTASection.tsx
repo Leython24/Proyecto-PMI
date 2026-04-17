@@ -60,7 +60,7 @@ const CTASection = () => {
               proyecto?
             </h2>
 
-            {/* Descripción — Aumentamos el max-w para que fluya más cerca del león */}
+            {/* Descripción */}
             <p className="text-white/70 text-sm sm:text-base leading-relaxed max-w-xl">
               Únete al PMI Norte Perú Chapter y forma parte de una comunidad
               que impulsa el crecimiento profesional, la innovación y el
@@ -70,12 +70,11 @@ const CTASection = () => {
               </span>
             </p>
 
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 pt-2 max-w-md">
+            {/* Stats - AHORA SON 2 COLUMNAS (grid-cols-2) */}
+            <div className="grid grid-cols-2 gap-4 pt-2 max-w-sm">
               {[
                 { value: "3", label: "Ciudades" },
-                { value: "500+", label: "Miembros" },
-                { value: "12+", label: "Eventos/año" },
+                { value: "Más de 50", label: "Voluntarios" }, // Dato actualizado
               ].map((stat) => (
                 <div
                   key={stat.label}

@@ -119,19 +119,15 @@ const AboutSection = () => {
                 profesionales en toda la macroregión norte.
               </p>
 
-              {/* Stats */}
+              {/* Stats - ACTUALIZADO */}
               <div className="space-y-3">
                 {[
                   { value: "3", label: "Ciudades unidas" },
-                  { value: "100+", label: "Estudiantes activos" },
-                  { value: "5+", label: "Eventos al año" },
+                  { value: "50+", label: "Voluntarios activos" }, // Cambiado a Voluntarios y eliminados los eventos
                 ].map((stat) => (
                   <div key={stat.label} className="flex items-center gap-4">
-                    <span
-                      className="text-2xl font-extrabold min-w-[56px]"
-                      style={{ color: "#3FC0F0" }}
-                    >
-                      {stat.value}
+                    <span translate="no" className="text-2xl font-extrabold min-w-[56px]" style={{ color: "#3FC0F0" }}>
+                    {stat.value}
                     </span>
                     <div
                       className="h-px flex-1 rounded-full"

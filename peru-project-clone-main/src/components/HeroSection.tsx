@@ -1,4 +1,4 @@
-import heroBg from "@/assets/hero-bg.jpg";
+import heroVideo from "@/assets/hero-bg.mp4"; // <-- 1. Importamos el video
 import eventImg from "@/assets/event-cajamarca.jpg";
 import { Button } from "@/components/ui/button";
 
@@ -6,24 +6,26 @@ const HeroSection = () => {
   return (
     <section id="inicio" className="relative min-h-screen flex items-center overflow-hidden">
 
-      {/* Background imagen */}
-        <img
-    src={heroBg}
-    alt=""
-    className="absolute inset-0 w-full h-full object-cover"
-    width={1920}
-    height={1080}
-  />
+      {/* ── 2. El Nuevo Fondo de Video ── */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover -z-20"
+      >
+        <source src={heroVideo} type="video/mp4" />
+      </video>
 
-      {/* Gradiente oscuro neutro — estilo imagen */}
-  <div
-    className="absolute inset-0"
-    style={{
-      background: "linear-gradient(to right, rgba(17, 16, 16, 0.88) 30%, rgba(10,10,10,0.65) 60%, rgba(10,10,10,0.30) 100%)",
-    }}
-  />
+      {/* Gradiente oscuro neutro (¡No lo tocamos porque está perfecto!) */}
+      <div
+        className="absolute inset-0 -z-10"
+        style={{
+          background: "linear-gradient(to right, rgba(17, 16, 16, 0.88) 30%, rgba(10,10,10,0.65) 60%, rgba(10,10,10,0.30) 100%)",
+        }}
+      />
 
-      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center pt-28 sm:pt-32 lg:pt-36 pb-12 lg:pb-16">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center pt-28 sm:pt-32 lg:pt-36 pb-12 lg:pb-16">
 
         {/* ── LEFT ── */}
         <div className="space-y-5 sm:space-y-6 lg:space-y-8 max-w-2xl mx-auto lg:mx-0">
