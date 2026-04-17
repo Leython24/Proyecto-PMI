@@ -3,12 +3,12 @@ import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/LogoPMI.jpg";
 
+const UNETE_URL = "https://beacons.ai/student_club_pmi_norte_peru";
+
 const navLinks = [
-  { label: "Inicio", href: "#inicio" },
-  { label: "Eventos", href: "#eventos" },
-  { label: "Beneficios", href: "#beneficios" },
+  { label: "Inicio",   href: "#inicio" },
+  { label: "Eventos",  href: "#eventos" },
   { label: "Nosotros", href: "#nosotros" },
-  { label: "Registro", href: "#registro" },
 ];
 
 const InstagramIcon = () => (
@@ -43,68 +43,39 @@ const Navbar = () => {
       <div className="bg-white border-b border-gray-200 py-3 px-4">
         <div className="container mx-auto flex items-center justify-between">
 
-         {/* Iconos sociales — negros */}
-<div className="flex items-center gap-4">
-  <a
-    href="https://www.instagram.com/comunidadestudiantilpminorte/"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="Instagram"
-    className="text-black hover:text-[#4F17A8] transition-colors"
-  >
-    <InstagramIcon />
-  </a>
-  <a
-    href="https://www.facebook.com/profile.php?id=61567366105780"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="Facebook"
-    className="text-black hover:text-[#4F17A8] transition-colors"
-  >
-    <FacebookIcon />
-  </a>
-  <a
-    href="https://www.linkedin.com/company/comunidad-estudiantil-pmi-norte-per%C3%BA/posts/?feedView=all"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="LinkedIn"
-    className="text-black hover:text-[#4F17A8] transition-colors"
-  >
-    <LinkedinIcon />
-  </a>
-</div>
+          {/* Iconos sociales */}
+          <div className="flex items-center gap-4">
+            <a href="https://www.instagram.com/comunidadestudiantilpminorte/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-black hover:text-[#4F17A8] transition-colors">
+              <InstagramIcon />
+            </a>
+            <a href="https://www.facebook.com/profile.php?id=61567366105780" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-black hover:text-[#4F17A8] transition-colors">
+              <FacebookIcon />
+            </a>
+            <a href="https://www.linkedin.com/company/comunidad-estudiantil-pmi-norte-per%C3%BA/posts/?feedView=all" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-black hover:text-[#4F17A8] transition-colors">
+              <LinkedinIcon />
+            </a>
+          </div>
 
           {/* Texto derecha */}
           <div className="hidden md:flex items-center gap-3 text-xs text-gray-600">
             <span>informes@pminorteperu.org</span>
             <span className="text-gray-300">|</span>
-            <a href="#contacto"
-              className="text-[#3FC0F0] hover:text-[#4F17A8] transition-colors font-semibold">
+            <a href="#contacto" className="text-[#3FC0F0] hover:text-[#4F17A8] transition-colors font-semibold">
               Contáctanos
             </a>
-            <span className="text-gray-300">|</span>
-            
           </div>
         </div>
       </div>
 
       {/* ── MAIN NAV — morado ── */}
-      <nav style={{ background: "#4F17A8" }} className="shadow-lg ">
+      <nav style={{ background: "#4F17A8" }} className="shadow-lg">
         <div className="container mx-auto flex items-center justify-between">
 
-          {/* Logo — fondo igual al nav para fusionarse */}
+          {/* Logo */}
           <a href="#inicio" className="flex items-center gap-4 group">
-            <div
-              className="flex items-center"
-              style={{ background: "#4F17A8" }}
-            >
-              <img
-                src={logo}
-                alt="PMI Norte Perú"
-                className="h-14 w-auto object-contain"
-              />
+            <div className="flex items-center" style={{ background: "#4F17A8" }}>
+              <img src={logo} alt="PMI Norte Perú" className="h-14 w-auto object-contain" />
             </div>
-
           </a>
 
           {/* Desktop links */}
@@ -118,13 +89,17 @@ const Navbar = () => {
                 {link.label}
               </a>
             ))}
-            <Button
-              size="sm"
-              className="rounded-full px-7 py-2 font-bold text-sm shadow-lg hover:opacity-90 transition-all"
-              style={{ background: "#FF610F", color: "#200F38" }}
-            >
-              Únete
-            </Button>
+
+            {/* ✅ Únete → beacons.ai */}
+            <a href={UNETE_URL} target="_blank" rel="noopener noreferrer">
+              <Button
+                size="sm"
+                className="rounded-full px-7 py-2 font-bold text-sm shadow-lg hover:opacity-90 transition-all"
+                style={{ background: "#FF610F", color: "#200F38" }}
+              >
+                Únete
+              </Button>
+            </a>
           </div>
 
           {/* Mobile toggle */}
@@ -139,25 +114,17 @@ const Navbar = () => {
 
         {/* ── Mobile menu ── */}
         {open && (
-          <div
-            style={{ background: "#290A64" }}
-            className="lg:hidden border-t border-white/10 pb-6 px-4"
-          >
+          <div style={{ background: "#290A64" }} className="lg:hidden border-t border-white/10 pb-6 px-4">
+
             {/* Logo mobile */}
             <div className="py-4 flex items-center gap-3 border-b border-white/10 mb-2">
               <div style={{ background: "#290A64" }}>
-                <img
-                  src={logo}
-                  alt="PMI Norte Perú"
-                  className="h-14 w-auto object-contain"
-                />
+                <img src={logo} alt="PMI Norte Perú" className="h-14 w-auto object-contain" />
               </div>
               <div className="flex flex-col leading-tight">
                 <div className="flex items-baseline gap-1">
                   <span className="text-lg font-black text-white">PMI</span>
-                  <span className="text-lg font-black" style={{ color: "#3FC0F0" }}>
-                    Norte Perú
-                  </span>
+                  <span className="text-lg font-black" style={{ color: "#3FC0F0" }}>Norte Perú</span>
                 </div>
                 <span className="text-[9px] font-bold tracking-widest text-slate-400 uppercase">
                   Student Club
@@ -176,12 +143,15 @@ const Navbar = () => {
               </a>
             ))}
 
-            <Button
-              className="mt-4 w-full rounded-full font-bold"
-              style={{ background: "#3FC0F0", color: "#200F38" }}
-            >
-              Únete
-            </Button>
+            {/* ✅ Únete mobile → beacons.ai */}
+            <a href={UNETE_URL} target="_blank" rel="noopener noreferrer" className="block mt-4">
+              <Button
+                className="w-full rounded-full font-bold"
+                style={{ background: "#3FC0F0", color: "#200F38" }}
+              >
+                Únete
+              </Button>
+            </a>
           </div>
         )}
       </nav>

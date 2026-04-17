@@ -1,5 +1,5 @@
 import { Linkedin, ChevronLeft, ChevronRight } from "lucide-react";
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect } from "react";
 import presidentaImg from "@/assets/Presidenta.png";
 import vicepresidentaImg from "@/assets/Vicepresidenta.png";
 import LiderdeEventosImg from "@/assets/LiderdeEventos.png";
@@ -9,13 +9,13 @@ import LiderdeMarketing from "@/assets/LiderdeMarketing.png";
 import LiderdeTalentoHumano from "@/assets/LiderdeTalentoHumano.png";
 
 const members = [
-  { name: "Nombre Apellido", role: "Presidenta",              photo: presidentaImg },
-  { name: "Nombre Apellido", role: "Vicepresidenta",          photo: vicepresidentaImg },
-  { name: "Nombre Apellido", role: "Líder de Eventos",        photo: LiderdeEventosImg },
-  { name: "Nombre Apellido", role: "Líder de PMO",            photo: LiderdePMOImg },
-  { name: "Nombre Apellido", role: "Líder de Finanzas",       photo: LiderdeFinanzas },
-  { name: "Nombre Apellido", role: "Líder de Marketing",      photo: LiderdeMarketing },
-  { name: "Nombre Apellido", role: "Líder de Talento Humano", photo: LiderdeTalentoHumano },
+  { name: "Diana Barrantes", role: "Presidenta",              photo: presidentaImg,        linkedin: "https://www.linkedin.com/in/dianabarrantesgallardo/" },
+  { name: "Rosselly Villanueva", role: "Vicepresidenta",          photo: vicepresidentaImg,    linkedin: "https://www.linkedin.com/in/rosselly-villanueva-mendoza-02b080377/" },
+  { name: "Rodrigo Tasilla", role: "Líder de Eventos",        photo: LiderdeEventosImg,    linkedin: "https://www.linkedin.com/in/rodrigotasilladurand/" },
+  { name: "Daniel Sánchez", role: "Líder de PMO",            photo: LiderdePMOImg,        linkedin: "https://www.linkedin.com/in/danielsanchezcab/" },
+  { name: "Rosalia Tapia", role: "Líder de Finanzas",       photo: LiderdeFinanzas,      linkedin: "https://www.linkedin.com/in/rosalia-victoria-tapia-ch%C3%A1vez-520a62369/" },
+  { name: "Madeleine Darline", role: "Líder de Marketing",      photo: LiderdeMarketing,     linkedin: "https://www.linkedin.com/in/madeleinedarline/" },
+  { name: "Marycielo Roca", role: "Líder de Talento Humano", photo: LiderdeTalentoHumano, linkedin: "https://www.linkedin.com/in/marycielo-roca-mendoza-administracion/" },
 ];
 
 const getVisible = () => {
@@ -28,9 +28,7 @@ const getVisible = () => {
 const BoardSection = () => {
   const [current, setCurrent] = useState(0);
   const [visible, setVisible] = useState<number>(getVisible);
-  const [sliding, setSliding] = useState(false);
-  const [direction, setDirection] = useState<"left" | "right">("right");
-  const trackRef = useRef<HTMLDivElement>(null);
+  const [animating, setAnimating] = useState(false);
 
   useEffect(() => {
     const onResize = () => {
@@ -45,57 +43,60 @@ const BoardSection = () => {
   const maxIndex = members.length - visible;
 
   const goTo = useCallback(
-    (next: number, dir: "left" | "right") => {
-      if (sliding) return;
-      setDirection(dir);
-      setSliding(true);
+    (next: number) => {
+      if (animating) return;
+      setAnimating(true);
       setTimeout(() => {
         setCurrent(next);
-        setSliding(false);
-      }, 420);
+        setAnimating(false);
+      }, 500);
     },
-    [sliding]
+    [animating]
   );
 
-  const prev = useCallback(() => { if (current > 0) goTo(current - 1, "left"); }, [current, goTo]);
-  const next = useCallback(() => { if (current < maxIndex) goTo(current + 1, "right"); }, [current, maxIndex, goTo]);
+  const prev = useCallback(() => { if (current > 0) goTo(current - 1); }, [current, goTo]);
+  const next = useCallback(() => { if (current < maxIndex) goTo(current + 1); }, [current, maxIndex, goTo]);
 
   return (
     <section id="junta" className="py-12 sm:py-16" style={{ background: "#F0FBFF" }}>
       <style>{`
-        /* Animación tipo iPhone — spring easing */
-        @keyframes iphoneSlideInRight {
-          0%   { opacity: 0; transform: translateX(100%) scale(0.92); }
-          60%  { opacity: 1; transform: translateX(-4%)  scale(1.01); }
-          80%  { transform: translateX(2%)  scale(0.99); }
-          100% { opacity: 1; transform: translateX(0)    scale(1);    }
+        /* ── Fade puro: sin movimiento, solo aparece/desaparece suave ── */
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to   { opacity: 1; }
         }
-        @keyframes iphoneSlideInLeft {
-          0%   { opacity: 0; transform: translateX(-100%) scale(0.92); }
-          60%  { opacity: 1; transform: translateX(4%)    scale(1.01); }
-          80%  { transform: translateX(-2%)  scale(0.99); }
-          100% { opacity: 1; transform: translateX(0)     scale(1);    }
-        }
-        @keyframes iphoneSlideOutLeft {
-          0%   { opacity: 1; transform: translateX(0)     scale(1);    }
-          100% { opacity: 0; transform: translateX(-80%) scale(0.92); }
-        }
-        @keyframes iphoneSlideOutRight {
-          0%   { opacity: 1; transform: translateX(0)    scale(1);    }
-          100% { opacity: 0; transform: translateX(80%)  scale(0.92); }
+        @keyframes fadeOut {
+          from { opacity: 1; }
+          to   { opacity: 0; }
         }
 
-        .iphone-in-right  { animation: iphoneSlideInRight  0.42s cubic-bezier(0.34,1.56,0.64,1) both; }
-        .iphone-in-left   { animation: iphoneSlideInLeft   0.42s cubic-bezier(0.34,1.56,0.64,1) both; }
-        .iphone-out-left  { animation: iphoneSlideOutLeft  0.22s cubic-bezier(0.4,0,1,1) both; }
-        .iphone-out-right { animation: iphoneSlideOutRight 0.22s cubic-bezier(0.4,0,1,1) both; }
+        .card-visible {
+          animation: fadeIn 0.55s ease-in-out both;
+        }
+        .card-hidden {
+          animation: fadeOut 0.3s ease-in-out both;
+          pointer-events: none;
+        }
 
-        .board-card { transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease; }
-        .board-card:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 20px 40px rgba(41,10,100,0.25); }
-        .board-card:hover .card-img { transform: scale(1.06); }
-        .card-img { transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+        /* Hover suave */
+        .board-card {
+          transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+        }
+        .board-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 16px 28px rgba(41,10,100,0.22);
+        }
+        .card-img {
+          transition: transform 0.4s ease-out;
+        }
+        .board-card:hover .card-img {
+          transform: scale(1.04);
+        }
 
-        .dot-pill { transition: width 0.35s cubic-bezier(0.34,1.56,0.64,1), background 0.3s ease; }
+        /* Dot animado */
+        .dot-pill {
+          transition: width 0.3s ease-out, background 0.25s ease-out;
+        }
       `}</style>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -133,40 +134,25 @@ const BoardSection = () => {
             <ChevronLeft size={20} className="hidden sm:block" />
           </button>
 
-          {/* Track con overflow hidden */}
-          <div className="flex-1 overflow-hidden rounded-2xl">
-            <div
-              ref={trackRef}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"
-            >
+          {/* Grid */}
+          <div className="flex-1 overflow-hidden">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
               {members.map((m, i) => {
-                const isNowVisible  = i >= current && i < current + visible;
-                const wasPrevVisible = sliding && (
-                  i >= (direction === "right" ? current - 1 : current + 1) &&
-                  i <  (direction === "right" ? current - 1 + visible : current + 1 + visible)
-                );
-
-                let animClass = "";
-                if (sliding && isNowVisible)  animClass = direction === "right" ? "iphone-in-right"  : "iphone-in-left";
-                if (sliding && wasPrevVisible) animClass = direction === "right" ? "iphone-out-left" : "iphone-out-right";
-
-                const show = isNowVisible || (sliding && wasPrevVisible);
-
+                const isVisible = i >= current && i < current + visible;
                 return (
                   <div
                     key={i}
-                    className={animClass}
+                    className={isVisible ? "card-visible" : "card-hidden"}
                     style={{
-                      display: show ? "block" : "none",
-                      animationDelay: isNowVisible ? `${(i - current) * 0.05}s` : "0s",
+                      display: isVisible ? "block" : "none",
+                      animationDelay: isVisible ? `${(i - current) * 0.08}s` : "0s",
                     }}
                   >
-                    {/* Card */}
                     <div
                       className="board-card rounded-xl overflow-hidden shadow-md"
                       style={{ background: "#290A64" }}
                     >
-                      {/* Foto — más pequeña con aspect 4/5 */}
+                      {/* Foto */}
                       <div
                         className="w-full overflow-hidden relative"
                         style={{
@@ -188,7 +174,6 @@ const BoardSection = () => {
                             </span>
                           </div>
                         )}
-                        {/* Gradiente inferior */}
                         <div
                           className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none"
                           style={{ background: "linear-gradient(to top, #290A64, transparent)" }}
@@ -207,7 +192,9 @@ const BoardSection = () => {
                           {m.name}
                         </h4>
                         <a
-                          href="#"
+                          href={m.linkedin}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className="inline-flex items-center gap-1 text-xs text-white/40 hover:text-[#3FC0F0] transition-all duration-200"
                           aria-label={`LinkedIn de ${m.name}`}
                         >
@@ -235,12 +222,12 @@ const BoardSection = () => {
           </button>
         </div>
 
-        {/* Dots tipo iPhone */}
+        {/* Dots */}
         <div className="flex justify-center items-center gap-1.5 mt-6">
           {Array.from({ length: maxIndex + 1 }).map((_, i) => (
             <button
               key={i}
-              onClick={() => goTo(i, i > current ? "right" : "left")}
+              onClick={() => goTo(i)}
               aria-label={`Ir a ${i + 1}`}
               className="dot-pill rounded-full"
               style={{

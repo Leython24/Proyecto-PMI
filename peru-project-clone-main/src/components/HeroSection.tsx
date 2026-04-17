@@ -7,21 +7,21 @@ const HeroSection = () => {
     <section id="inicio" className="relative min-h-screen flex items-center overflow-hidden">
 
       {/* Background imagen */}
-      <img
-        src={heroBg}
-        alt=""
-        className="absolute inset-0 w-full h-full object-cover scale-105"
-        width={1920}
-        height={1080}
-      />
+        <img
+    src={heroBg}
+    alt=""
+    className="absolute inset-0 w-full h-full object-cover"
+    width={1920}
+    height={1080}
+  />
 
-      {/* Gradiente */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: "linear-gradient(to right, rgba(32,15,56,0.92) 25%, rgba(41,10,100,0.80) 60%, rgba(55,16,117,0.45) 100%)",
-        }}
-      />
+      {/* Gradiente oscuro neutro — estilo imagen */}
+  <div
+    className="absolute inset-0"
+    style={{
+      background: "linear-gradient(to right, rgba(17, 16, 16, 0.88) 30%, rgba(10,10,10,0.65) 60%, rgba(10,10,10,0.30) 100%)",
+    }}
+  />
 
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center pt-28 sm:pt-32 lg:pt-36 pb-12 lg:pb-16">
 
@@ -49,9 +49,9 @@ const HeroSection = () => {
 
           {/* Título principal */}
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight">
-            Empoderando a los{" "}
-            <span style={{ color: "#3FC0F0" }}>futuros líderes</span>{" "}
-            del Norte.
+            ¡Maximizando el éxito de  {" "}
+            <span style={{ color: "#3FC0F0" }}> los proyectos para elevar nuestro mundo!</span>{" "}
+            
           </h1>
 
           {/* Frase */}
@@ -72,19 +72,16 @@ const HeroSection = () => {
 
           {/* Botones */}
           <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
-            <Button
-              className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-full font-bold text-base sm:text-lg text-white transition-all"
-              style={{ background: "#FF610F", boxShadow: "0 0 24px rgba(180,101,255,0.35)" }}
-            >
-              Únete a la Comunidad
-            </Button>
-            <Button
-              variant="outline"
-              className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-full font-bold text-base sm:text-lg text-white bg-transparent hover:bg-white/10 transition-all"
-              style={{ borderColor: "rgba(255,255,255,0.3)" }}
-            >
-              Ver Eventos
-            </Button>
+            
+            <a href="#eventos">
+      <Button
+        variant="outline"
+        className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-full font-bold text-base sm:text-lg text-white bg-transparent hover:bg-white/10 transition-all"
+        style={{ borderColor: "rgba(255,255,255,0.3)" }}
+      >
+        Ver Eventos
+      </Button>
+    </a>
           </div>
         </div>
 
@@ -110,21 +107,8 @@ const HeroSection = () => {
               <h3 className="text-xl font-bold text-white mb-1">
                 Comunidad Estudiantil PMI Norte Perú
               </h3>
-              <p className="text-white/60 text-sm mb-4">Cajamarca • 18 de Abril</p>
-              <div className="flex gap-3 justify-center">
-                <Button
-                  variant="outline"
-                  className="border-white/30 text-white hover:bg-white/10 rounded-full text-sm bg-transparent"
-                >
-                  Descubre más
-                </Button>
-                <Button
-                  className="text-white rounded-full text-sm font-bold"
-                  style={{ background: "#4F17A8" }}
-                >
-                  Inscribirme
-                </Button>
-              </div>
+              <p className="text-white/60 text-sm mb-4">•Trujillo • Piura • Cajamarca •2026 </p>
+              
             </div>
           </div>
         </div>
